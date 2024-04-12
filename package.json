@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@neynar/nodejs-sdk": "^1.17.0",
     "@supabase/supabase-js": "^2.42.3",
     "dotenv": "^16.4.5",
     "frog": "latest",

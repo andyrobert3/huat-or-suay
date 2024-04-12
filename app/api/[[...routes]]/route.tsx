@@ -1,4 +1,5 @@
 /** @jsxImportSource frog/jsx */
+import 'dotenv';
 
 import { Button, Frog, TextInput } from 'frog'
 import { devtools } from 'frog/dev'
@@ -9,6 +10,7 @@ import { GameStatus, PositionType } from "@/app/utils/constants";
 import { supabase } from '../../utils/supabase';
 import { Tables } from "@/app/types/supabase";
 import { WELCOME_GIF } from "@/app/constants";
+import { neynar } from 'frog/hubs'
 
 const TOKEN_TICKER = "ANGPAO";
 
@@ -16,7 +18,7 @@ const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
   // Supply a Hub to enable frame verification.
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
+  hub: neynar({ apiKey: process.env.NENYAR_KEY ?? '' })
 })
 
 // Uncomment to use Edge Runtime
@@ -404,7 +406,7 @@ app.frame('/game', async (c) => {
     const { buttonValue, inputText, status, frameData } = c
     const positionSize = Number(inputText);
     const positionType = buttonValue as PositionType;
-    const { fid } = frameData;
+    const { fid } = frameData!;
     // TODO: have validation on inputs
 
     // Reshare -> Idempotent (Read from DB, latest game for user assuming still playing)
