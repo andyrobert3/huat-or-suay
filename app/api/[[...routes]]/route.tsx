@@ -51,8 +51,6 @@ app.frame('/pregame', async (c) => {
         .order('created_at', {ascending: false})
         .returns<Array<Tables<'Game'>>>();
 
-    console.log(data);
-
     if (!fid) {
         return c.res({
             action: "/game",
@@ -127,7 +125,7 @@ app.frame('/pregame', async (c) => {
                       }}>Current price</div>
                       <div style={{
                         display: 'flex',
-                      }}>{price} USDC</div>
+                      }}>${price}</div>
                     </div>
       
                     <div
@@ -183,7 +181,7 @@ app.frame('/pregame', async (c) => {
                       }}>Ends in</div>
                       <div style={{
                         display: 'flex',
-                      }}>4 hours</div>
+                      }}>{data[0]?.gameEndTimeStamp}</div>
                     </div>
                   </div>
                 </div>
