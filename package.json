@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.42.3",
     "dotenv": "^16.4.5",
     "frog": "latest",
     "hono": "^4",
