@@ -596,70 +596,87 @@ app.frame('/game', async (c) => {
                             }}>You bet on</div>
                             <div style={{
                                 display: 'flex',
-                            }}>{gameData?.[0]?.position} {gameData?.[0]?.token}</div>
+                            }}>{gameData?.[0]?.position.toUpperCase()} {gameData?.[0]?.token}</div>
                         </div>
                     </div>
 
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start',
-                            fontSize: '48px',
-                            gap: '25px',
-                            fontWeight: '500',
-                        }}>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '8px',
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                color: '#7a7d89',
-                                fontSize: '36px',
-                            }}>Price of {gameData?.[0]?.token} at bet time</div>
-                            <div style={{
-                                display: 'flex',
-                            }}>${gameData?.[0]?.startPrice.toLocaleString()}</div>
-                        </div>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '8px',
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                color: '#7a7d89',
-                                fontSize: '36px',
-                            }}>Countdown</div>
-                            <div style={{
-                                display: 'flex',
-                            }}>{timeFormat}</div>
-                        </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      fontSize: '48px',
+                      gap: '25px',
+                      fontWeight: '500',
+                    }}>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Price of {gameData?.[0]?.token} at bet time
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                      }}>${gameData?.[0]?.startPrice.toLocaleString()}</div>
                     </div>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Price of {gameData?.[0]?.token} at bet time
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                      }}>${PRICE_CACHE['ETH']}</div>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Countdown
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{timeFormat}</div>
+                    </div>
+                  </div>
                 </div>
             </div>
         ),
-        intents: [
-            <Button action="/game" value="refresh">Refresh</Button>,
-            <Button action="/result" value="result">Show Result</Button>,
-            <Button.Reset>Reset</Button.Reset>,
-        ],
+      intents: [
+        <Button action="/game" value="refresh">Refresh</Button>,
+        <Button action="/result" value="result">Show Result</Button>,
+        <Button.Reset>Home</Button.Reset>,
+      ],
     })
 })
 
 function determineOutcome(position: PositionType, startPrice: number, currentPrice: number): GameStatus {
-    if (position === PositionType.LONG) {
-        return currentPrice > startPrice ? GameStatus.WON : GameStatus.LOST;
-    } else {
-        return currentPrice < startPrice ? GameStatus.WON : GameStatus.LOST;
-    }
+  if (position === PositionType.LONG) {
+    return currentPrice > startPrice ? GameStatus.WON : GameStatus.LOST;
+  } else {
+    return currentPrice < startPrice ? GameStatus.WON : GameStatus.LOST;
+  }
 }
 
 
-devtools(app, { serveStatic })
+devtools(app, {serveStatic})
 
 export const GET = handle(app)
 export const POST = handle(app)
