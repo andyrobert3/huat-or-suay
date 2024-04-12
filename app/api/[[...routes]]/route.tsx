@@ -245,8 +245,8 @@ app.frame('/pregame', async (c) => {
         ),
         intents: [
             <TextInput placeholder={`Enter your position in 🧧 ${TOKEN_TICKER}`} />,
-            <Button value="long" action="/game">📈 LONG</Button>,
-            <Button value="short" action="/game">📉 SHORT</Button>,
+            <Button value={PositionType.LONG} action="/game">📈 LONG</Button>,
+            <Button value={PositionType.SHORT} action="/game">📉 SHORT</Button>,
             <Button action="/pregame">🔄 Refresh</Button>,
             <Button.Reset>🏠 Home</Button.Reset>,
         ],
