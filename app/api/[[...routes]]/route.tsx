@@ -248,7 +248,7 @@ app.frame('/pregame', async (c) => {
             <Button value="long" action="/game">📈 LONG</Button>,
             <Button value="short" action="/game">📉 SHORT</Button>,
             <Button action="/pregame">🔄 Refresh</Button>,
-            <Button.Reset>Home</Button.Reset>,
+            <Button.Reset>🏠 Home</Button.Reset>,
         ],
     })
 })
@@ -385,7 +385,7 @@ app.frame('/profile', async (c) => {
         ),
         intents: [
             <Button action="/profile">🔄 Refresh</Button>,
-            <Button.Reset>Home</Button.Reset>,
+            <Button.Reset>🏠 Home</Button.Reset>,
         ],
     })
 })
@@ -620,11 +620,11 @@ app.frame('/game', async (c) => {
                         display: 'flex',
                         color: '#7a7d89',
                         fontSize: '36px',
-                      }}>Price of {gameData?.[0]?.token} at bet time
+                      }}>Price of {gameData?.[0]?.token} now
                       </div>
                       <div style={{
                         display: 'flex',
-                      }}>${PRICE_CACHE['ETH']}</div>
+                      }}>${PRICE_CACHE['ETH'].toLocaleString()}</div>
                     </div>
                     <div style={{
                       display: 'flex',
@@ -646,9 +646,9 @@ app.frame('/game', async (c) => {
             </div>
         ),
       intents: [
-        <Button action="/game" value="refresh">Refresh</Button>,
-        <Button action="/result" value="result">Show Result</Button>,
-        <Button.Reset>Home</Button.Reset>,
+        <Button action="/game" value="refresh">🔄 Refresh</Button>,
+        <Button action="/result" value="result">💯 Check Result</Button>,
+        <Button.Reset>🏠 Home</Button.Reset>,
       ],
     })
 })
@@ -677,33 +677,144 @@ app.frame('/result', async(c) => {
         image: (
             <div
                 style={{
-                    alignItems: 'center',
-                    background: 'linear-gradient(to right, #432889, #17101F)',
-                    backgroundSize: '100% 100%',
                     display: 'flex',
+                    padding: '30px',
                     flexDirection: 'column',
-                    flexWrap: 'nowrap',
-                    height: '100%',
                     justifyContent: 'center',
-                    textAlign: 'center',
-                    width: '100%',
+                    backgroundImage: 'linear-gradient(135deg,#202020,#000)',
+                    gap: '35px',
+                    fontSize:'22px',
+                    width: '1200px',
+                    height: '630px',
+                    color: '#fff',
                 }}
             >
-                <div
+                <div style={{
+                    display: 'flex',
+                    alignItems:'center'
+                }}>
+                <span
                     style={{
-                        color: 'white',
-                        fontSize: 60,
-                        fontStyle: 'normal',
-                        letterSpacing: '-0.025em',
-                        lineHeight: 1.4,
-                        marginTop: 30,
-                        padding: '0 120px',
-                        whiteSpace: 'pre-wrap',
+                        minHeight: '60px',
+                        minWidth: '60px',
+                        borderRadius: '10px',
+                        backgroundImage: 'linear-gradient(135deg, #2e55ff, #ff279c)',
+                        marginRight: '15px',
                     }}
-                >
-                    { gameDetails.status === GameStatus.WON ?
-                        `HUAT LAH! You won ${gameDetails.wager}\nStart Price: ${gameDetails.startPrice}\nEnd Price: ${gameDetails.endPrice}\nPosition Type: ${gameDetails.position}\nNew Balance: ${userDetails.data.balance}`
-                        : `SIBEI SUAY! You lost ${gameDetails.wager}\nStart Price: ${gameDetails.startPrice}\nEnd Price: ${gameDetails.endPrice}\nPosition Type: ${gameDetails.position}\nNew Balance: ${userDetails.data.balance}` }
+                />
+                    <div style={{
+                        display: 'flex',
+                        color: '#fff',
+                        fontSize: '60px'
+                    }}>
+                        {gameDetails.status === GameStatus.WON ? `HUAT LAH! You won ${gameDetails.wager}` : `SIBEI SUAY! You lost ${gameDetails.wager}`} 
+                    </div>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    gap: '100px',
+                }}>
+                    
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            fontSize: '48px',
+                            gap: '25px',
+                        }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                            }}>
+                            <div style={{
+                                display: 'flex',
+                                color: '#7a7d89',
+                                fontSize: '36px',
+                            }}>Price of {gameData?.[0]?.token} at bet time</div>
+                            <div style={{
+                                display: 'flex',
+                            }}>{gameDetails.startPrice}</div>
+                        </div>
+
+
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                            }}>
+                            <div style={{
+                                display: 'flex',
+                                color: '#7a7d89',
+                                fontSize: '36px',
+                            }}>Final price of {gameData?.[0]?.token}</div>
+                            <div style={{
+                                display: 'flex',
+                            }}>{gameDetails.endPrice}</div>
+                        </div>
+                    </div>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      fontSize: '48px',
+                      gap: '25px',
+                      fontWeight: '500',
+                    }}>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>You bet on
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{gameDetails.position} {gameDetails.token}</div>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Your new 🧧 {TOKEN_TICKER} balance
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{userDetails.data.balance}</div>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Countdown
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{timeFormat}s</div>
+                    </div>
+                  </div>
                 </div>
             </div>
         ),
