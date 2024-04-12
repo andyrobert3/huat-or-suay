@@ -638,7 +638,7 @@ app.frame('/game', async (c) => {
                       </div>
                       <div style={{
                         display: 'flex',
-                      }}>${PRICE_CACHE['ETH']}</div>
+                      }}>${PRICE_CACHE['ETH'].toLocaleString()}</div>
                     </div>
                     <div style={{
                       display: 'flex',
@@ -660,7 +660,7 @@ app.frame('/game', async (c) => {
             </div>
         ),
       intents: [
-        <Button action="/game" value="refresh">Refresh</Button>,
+        <Button action="/game" value="refresh">🔄 Refresh</Button>,
         <Button action="/result" value="result">Show Result</Button>,
         <Button.Reset>Home</Button.Reset>,
       ],
