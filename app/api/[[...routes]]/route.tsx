@@ -667,6 +667,67 @@ app.frame('/game', async (c) => {
     })
 })
 
+app.frame('/result', async(c) => {
+    const { frameData } = c
+    const { fid } = frameData!;
+
+    const { data: gameData, error } = await supabase.from('Game')
+        .select()
+        .eq('fid', fid)
+        .order('created_at', { ascending: false })
+        .returns<Array<Tables<'Game'>>>();
+
+    if (gameData === null) {
+        throw new Error("Data is null")
+    }
+    const gameDetails = gameData.filter(r => r.status !== GameStatus.IN_PROGRESS)[0];
+    const userDetails = await supabase.from('User').select('balance').eq('fid', fid).single<Tables<'User'>>();
+
+    if (userDetails.data === null) {
+        throw new Error('User profile not fetch')
+    }
+
+    return c.res({
+        image: (
+            <div
+                style={{
+                    alignItems: 'center',
+                    background: 'linear-gradient(to right, #432889, #17101F)',
+                    backgroundSize: '100% 100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexWrap: 'nowrap',
+                    height: '100%',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    width: '100%',
+                }}
+            >
+                <div
+                    style={{
+                        color: 'white',
+                        fontSize: 60,
+                        fontStyle: 'normal',
+                        letterSpacing: '-0.025em',
+                        lineHeight: 1.4,
+                        marginTop: 30,
+                        padding: '0 120px',
+                        whiteSpace: 'pre-wrap',
+                    }}
+                >
+                    { gameDetails.status === GameStatus.WON ?
+                        `HUAT LAH! You won ${gameDetails.wager}\nStart Price: ${gameDetails.startPrice}\nEnd Price: ${gameDetails.endPrice}\nPosition Type: ${gameDetails.position}\nNew Balance: ${userDetails.data.balance}`
+                        : `SIBEI SUAY! You lost ${gameDetails.wager}\nStart Price: ${gameDetails.startPrice}\nEnd Price: ${gameDetails.endPrice}\nPosition Type: ${gameDetails.position}\nNew Balance: ${userDetails.data.balance}` }
+                </div>
+            </div>
+        ),
+        intents: [
+            <Button action="/">Play Again</Button>,
+            <Button.Reset>Reset</Button.Reset>,
+        ],
+    })
+});
+
 function determineOutcome(position: PositionType, startPrice: number, currentPrice: number): GameStatus {
   if (position === PositionType.LONG) {
     return currentPrice > startPrice ? GameStatus.WON : GameStatus.LOST;
