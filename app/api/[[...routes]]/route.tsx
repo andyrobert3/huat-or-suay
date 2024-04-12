@@ -10,7 +10,7 @@ import { supabase } from '../../utils/supabase';
 import { Tables } from "@/app/types/supabase";
 import { WELCOME_GIF } from "@/app/constants";
 
-const TOKEN_TICKER = "$HUAT";
+const TOKEN_TICKER = "HUAT";
 
 const app = new Frog({
   assetsPath: '/',
@@ -69,7 +69,7 @@ app.frame('/pregame', async (c) => {
             </div>
         ),
         intents: [
-            <TextInput placeholder={`Enter your position in ${TOKEN_TICKER}`} />,
+            <TextInput placeholder={`Enter your position in 🧧 ${TOKEN_TICKER}`} />,
             <Button value={PositionType.LONG} action="/game">Long</Button>,
             <Button value={PositionType.SHORT} action="/game">Short</Button>,
             <Button action="/pregame">Refresh</Button>,
@@ -80,8 +80,8 @@ app.frame('/pregame', async (c) => {
 
 
 app.frame('/profile', async (c) => {
-    const { status } = c
-    const { fid } = c.frameData;
+    const { status, frameData } = c
+    const { fid } = frameData!;
 
     // If user doesn't exist, create user with default balance $1000
 
@@ -101,35 +101,112 @@ app.frame('/profile', async (c) => {
     return c.res({
         image: (
             <div
-                style={{
-                    alignItems: 'center',
-                    background:
-                        status === 'response'
-                            ? 'linear-gradient(to right, #432889, #17101F)'
-                            : 'black',
-                    backgroundSize: '100% 100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexWrap: 'nowrap',
-                    height: '100%',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                    width: '100%',
-                }}
+              style={{
+                display: 'flex',
+                padding: '30px',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundImage: 'linear-gradient(135deg,#202020,#000)',
+                gap: '35px',
+                fontSize:'22px',
+                width: '1200px',
+                height: '630px',
+                color: '#fff',
+              }}
             >
-                <div
+              <div style={{
+                display: 'flex',
+                alignItems:'center'
+              }}>
+                <span
+                  style={{
+                    minHeight: '60px',
+                    minWidth: '60px',
+                    borderRadius: '10px',
+                    backgroundImage: 'linear-gradient(135deg, #2e55ff, #ff279c)',
+                    marginRight: '15px',
+                  }}
+                />
+                <div style={{
+                  display: 'flex',
+                  color: '#fff',
+                  fontSize: '60px'
+                }}>
+                  My profile
+                </div>
+              </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  gap: '100px',
+                }}>
+                  <div
                     style={{
-                        color: 'white',
-                        fontSize: 60,
-                        fontStyle: 'normal',
-                        letterSpacing: '-0.025em',
-                        lineHeight: 1.4,
-                        marginTop: 30,
-                        padding: '0 120px',
-                        whiteSpace: 'pre-wrap',
-                    }}
-                >
-                    {`Balance of ${TOKEN_TICKER}: ${user?.balance} ${TOKEN_TICKER}\nTotal Trades: ${games?.length ?? 0}`}
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      fontSize: '48px',
+                      gap: '25px',
+                  }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>FID</div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{fid}</div>
+                    </div>
+      
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Your 🧧 {TOKEN_TICKER} balance</div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{user?.balance.toLocaleString()} 🧧</div>
+                    </div>
+                  </div>
+      
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      fontSize: '48px',
+                      gap: '25px',
+                      fontWeight: '500',
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Total games played</div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{games?.length ?? 0}</div>
+                    </div>
+                  </div>
                 </div>
             </div>
         ),
