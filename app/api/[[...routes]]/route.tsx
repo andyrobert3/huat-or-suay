@@ -10,15 +10,18 @@ import { GameStatus, PositionType } from "@/app/utils/constants";
 import { supabase } from '../../utils/supabase';
 import { Tables } from "@/app/types/supabase";
 import { WELCOME_GIF } from "@/app/constants";
-import { neynar } from 'frog/hubs'
+import {PRICE_CACHE, pollPrices} from "@/app/utils/price";
+import {countDownFrom, diffDuration, millisecondsToSeconds, timestamptzToMilliseconds} from "@/app/utils/time";
 
 const TOKEN_TICKER = "ANGPAO";
+const GAME_ROUND_IN_MS = 30_000;
+const CRYPTO = "ETH";
+
+pollPrices();
 
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  // Supply a Hub to enable frame verification.
-  hub: neynar({ apiKey: process.env.NENYAR_KEY ?? '' })
 })
 
 // Uncomment to use Edge Runtime
@@ -99,9 +102,8 @@ app.frame('/instructions', async (c) => {
 
 app.frame('/pregame', async (c) => {
     const tokenName = "Ethereum"
-    const tokenSymbol = "ETH"
+    const tokenSymbol = CRYPTO;
 
-    // Fetch prices of token
     const price = (await fetchTokenPrice(tokenSymbol)).toLocaleString(); // format w thousands sep
 
     // Get frame data
@@ -249,7 +251,7 @@ app.frame('/pregame', async (c) => {
                       }}>Ends in</div>
                       <div style={{
                         display: 'flex',
-                      }}>{data[0]?.gameEndTimeStamp}</div>
+                      }}>{data?.[0]?.gameEndTimeStamp}</div>
                     </div>
                   </div>
                 </div>
@@ -405,119 +407,256 @@ app.frame('/profile', async (c) => {
 app.frame('/game', async (c) => {
     const { buttonValue, inputText, status, frameData } = c
     const positionSize = Number(inputText);
-    const positionType = buttonValue as PositionType;
+
+    let positionType: PositionType | null = null;
+    if (buttonValue !== 'refresh') {
+        positionType = buttonValue as PositionType;
+    }
+
+    console.log('buttonValue', buttonValue);
+
     const { fid } = frameData!;
     // TODO: have validation on inputs
 
     // Reshare -> Idempotent (Read from DB, latest game for user assuming still playing)
-    const {data} = await supabase.from('Game')
+    const { data } = await supabase.from('Game')
         .select()
         .eq('fid', fid)
         .eq('status', GameStatus.IN_PROGRESS)
-        .order('created_at', {ascending: false})
+        .order('created_at', { ascending: false })
         .returns<Array<Tables<'Game'>>>();
 
-    // string to number
+    let gameData = data;
 
-    console.log("data", data);
     let timeFormat = "";
+
     // If no game found, create new game
-    if (data?.length == 0) {
-        // Insert "Game" record
-        // Store timestamp
-        const res = await supabase.from('Game').upsert({
-            status: GameStatus.IN_PROGRESS,
-            wager: positionSize,
-            position: positionType,
-            fid: fid,
-            token: "ETH",
-            startPrice: await fetchTokenPrice("ETH"),
-            endPrice: null,
-        }).select();
+    if (gameData == null || gameData?.length == 0) {
+        // Query most recent game (to get "position" type)
+        if (!positionType) {
+            const { data: mostRecentGame } = await supabase.from('Game')
+                .select()
+                .eq('fid', fid)
+                .order('created_at', { ascending: false })
+                .single<Tables<'Game'>>();
 
-        console.log('Data:', res.data);
-        console.log('Error:', res.error);
+            console.log({ mostRecentGame })
+            positionType = mostRecentGame!.position as PositionType;
 
-        // Store price at start time
+            // Read from DB (most recent game)
+            gameData = [mostRecentGame!];
 
-        // Insert "Game" record
+            timeFormat = '0';
+        } else {
+            const startPrice = await fetchTokenPrice(CRYPTO);
+            const newGame = await supabase.from('Game').insert({
+                status: GameStatus.IN_PROGRESS,
+                wager: positionSize,
+                position: positionType,
+                fid,
+                token: CRYPTO,
+                startPrice,
+                endPrice: null,
+            }).select();
+
+            const { data: user } = await supabase.from('User')
+                .select('balance').eq('fid', fid).single<Tables<'User'>>();
+
+            if (user === null) {
+                throw new Error('User profile not fetch')
+            }
+
+            await supabase.from('User').update({
+                balance: user.balance - positionSize,
+            }).eq('fid', fid).select()
+
+            timeFormat = '30';
+
+            gameData = newGame.data;
+        }
+
     } else {
-        // If game found, update frame data
-        // Return current price
+        // Convert to Date object
+        const gameDetails = gameData.filter(r => r.status === GameStatus.IN_PROGRESS)?.[0];
 
-        // Check if game is still in progress
-        // If hit deadline, end game
+        const dateFromTimestamptz = timestamptzToMilliseconds(gameDetails.gameStartTimeStamp);
+        // Get current date
+        const currentDate = Date.now();
 
-        // always take first game
-        // if (data === null) {
-        //   throw new Error("Data is null")
-        // }
-        // const adjustedTimestamp = data[0].gameEndTimeStamp.replace(' ', 'T') + 'Z';
-        //
-        // // Convert to Date object
-        // const dateFromTimestamptz = new Date(adjustedTimestamp);
-        //
-        // // Get current date
-        // const currentDate = new Date();
-        //
-        // // Calculate difference in milliseconds
-        // const differenceInMilliseconds = currentDate.getMilliseconds() - dateFromTimestamptz.getMilliseconds();
-        //
-        // console.log('current', currentDate.getMilliseconds());
-        // console.log('end', dateFromTimestamptz.getMilliseconds());
-        // console.log('adjustedTimestamp', adjustedTimestamp);
-        // console.log('diff', differenceInMilliseconds);
-        // Convert milliseconds to minutes and seconds
-        // const differenceInMinutes = Math.floor(differenceInMilliseconds / 60000);
-        // const differenceInSeconds = Math.floor((differenceInMilliseconds % 60000) / 1000);
+        // Calculate difference in milliseconds
+        const durationInMs = diffDuration(currentDate, dateFromTimestamptz);
+        const durationLeft = countDownFrom(durationInMs, GAME_ROUND_IN_MS);
 
-        // console.log(`Difference: ${differenceInMinutes} minutes and ${differenceInSeconds} seconds`);
-        // timeFormat = `Difference: ${differenceInMinutes} minutes ${differenceInSeconds} seconds`;
+        // For simplicity sake, if d == 0, we will udpate the end time. This is not to be used in PROD.
+        if (durationLeft <= 0) {
+            // Update game end time
+            const gameOutcome: GameStatus = determineOutcome(gameDetails.position as PositionType, gameDetails.startPrice, PRICE_CACHE[CRYPTO]);
 
+            try {
+                await supabase.from('Game').update({
+                    status: gameOutcome,
+                    endPrice: PRICE_CACHE[CRYPTO],
+                }).eq('id', gameDetails.id).select();
+
+                if (gameOutcome === GameStatus.WON) {
+                    const userBalance = await supabase.from('User')
+                        .select('balance').eq('fid', fid).single<Tables<'User'>>();
+                    if (userBalance.data === null) {
+                        throw new Error('User profile not fetch')
+                    }
+
+                    await supabase.from('User').update({
+                        balance:  userBalance.data.balance + (2 * positionSize),
+                    }).eq('fid', fid).select()
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        timeFormat = millisecondsToSeconds(durationLeft);
     }
 
-    console.log('data', data)
     return c.res({
         image: (
             <div
                 style={{
-                    alignItems: 'center',
-                    background:
-                        status === 'response'
-                            ? 'linear-gradient(to right, #432889, #17101F)'
-                            : 'black',
-                    backgroundSize: '100% 100%',
                     display: 'flex',
+                    padding: '30px',
                     flexDirection: 'column',
-                    flexWrap: 'nowrap',
-                    height: '100%',
                     justifyContent: 'center',
-                    textAlign: 'center',
-                    width: '100%',
+                    backgroundImage: 'linear-gradient(135deg,#202020,#000)',
+                    gap: '35px',
+                    fontSize:'22px',
+                    width: '1200px',
+                    height: '630px',
+                    color: '#fff',
                 }}
             >
-                <div
+                <div style={{
+                    display: 'flex',
+                    alignItems:'center'
+                }}>
+                <span
                     style={{
-                        color: 'white',
-                        fontSize: 60,
-                        fontStyle: 'normal',
-                        letterSpacing: '-0.025em',
-                        lineHeight: 1.4,
-                        marginTop: 30,
-                        padding: '0 120px',
-                        whiteSpace: 'pre-wrap',
+                        minHeight: '60px',
+                        minWidth: '60px',
+                        borderRadius: '10px',
+                        backgroundImage: 'linear-gradient(135deg, #2e55ff, #ff279c)',
+                        marginRight: '15px',
                     }}
-                >
-                    {`Current Position Type: ${positionType}\nCurrent Position Size: ${positionSize} ${TOKEN_TICKER}\nTime Remaining: ${timeFormat}`}
+                />
+                    <div style={{
+                        display: 'flex',
+                        color: '#fff',
+                        fontSize: '60px'
+                    }}>
+                        Your bet on {gameData?.[0]?.token}
+                    </div>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    gap: '100px',
+                }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            fontSize: '48px',
+                            gap: '25px',
+                        }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                            }}>
+                            <div style={{
+                                display: 'flex',
+                                color: '#7a7d89',
+                                fontSize: '36px',
+                            }}>Your 🧧 {TOKEN_TICKER} bet placed</div>
+                            <div style={{
+                                display: 'flex',
+                            }}>{gameData?.[0]?.wager}</div>
+                        </div>
+
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                            }}>
+                            <div style={{
+                                display: 'flex',
+                                color: '#7a7d89',
+                                fontSize: '36px',
+                            }}>You bet on</div>
+                            <div style={{
+                                display: 'flex',
+                            }}>{gameData?.[0]?.position} {gameData?.[0]?.token}</div>
+                        </div>
+                    </div>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
+                            fontSize: '48px',
+                            gap: '25px',
+                            fontWeight: '500',
+                        }}>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '8px',
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                color: '#7a7d89',
+                                fontSize: '36px',
+                            }}>Price of {gameData?.[0]?.token} at bet time</div>
+                            <div style={{
+                                display: 'flex',
+                            }}>${gameData?.[0]?.startPrice.toLocaleString()}</div>
+                        </div>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '8px',
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                color: '#7a7d89',
+                                fontSize: '36px',
+                            }}>Countdown</div>
+                            <div style={{
+                                display: 'flex',
+                            }}>{timeFormat}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         ),
         intents: [
-            <Button action="/game">Refresh</Button>,
+            <Button action="/game" value="refresh">Refresh</Button>,
+            <Button action="/result" value="result">Show Result</Button>,
             <Button.Reset>Reset</Button.Reset>,
         ],
     })
 })
+
+function determineOutcome(position: PositionType, startPrice: number, currentPrice: number): GameStatus {
+    if (position === PositionType.LONG) {
+        return currentPrice > startPrice ? GameStatus.WON : GameStatus.LOST;
+    } else {
+        return currentPrice < startPrice ? GameStatus.WON : GameStatus.LOST;
+    }
+}
 
 
 devtools(app, { serveStatic })

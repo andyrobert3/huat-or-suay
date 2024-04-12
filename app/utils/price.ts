@@ -1,6 +1,6 @@
 import { fetchTokenPrices } from './binance';
 
-const INTERVAL_MS = 3_000;
+const INTERVAL_MS = 2_500;
 
 // Crypto tickers to keep in cache for price fetching
 const TICKERS = [

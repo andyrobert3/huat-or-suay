@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="348450a6-74ca-4154-969c-00997c93e31a" name="Changes" comment="feat: setup initial route.tsx">
-      <change afterPath="$PROJECT_DIR$/app/utils/time.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
+    <list default="true" id="348450a6-74ca-4154-969c-00997c93e31a" name="Changes" comment="feat: game fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/[[...routes]]/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/[[...routes]]/route.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/price.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/price.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +37,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Rebasing main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -67,7 +64,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712890259337</updated>
-      <workItem from="1712890260492" duration="10479000" />
+      <workItem from="1712890260492" duration="16263000" />
     </task>
     <task id="LOCAL-00001" summary="feat: npm init frog">
       <option name="closed" value="true" />
@@ -141,7 +138,31 @@
       <option name="project" value="LOCAL" />
       <updated>1712897238400</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat: time helper functions">
+      <option name="closed" value="true" />
+      <created>1712903953210</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1712903953210</updated>
+    </task>
+    <task id="LOCAL-00011" summary="chore: intelliJ config">
+      <option name="closed" value="true" />
+      <created>1712903997967</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1712903997967</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat: game fixes">
+      <option name="closed" value="true" />
+      <created>1712909684475</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1712909684475</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,6 +178,9 @@
     <MESSAGE value="feat: route.tsx setup" />
     <MESSAGE value="chore: .env.example" />
     <MESSAGE value="feat: setup initial route.tsx" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: setup initial route.tsx" />
+    <MESSAGE value="feat: time helper functions" />
+    <MESSAGE value="chore: intelliJ config" />
+    <MESSAGE value="feat: game fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: game fixes" />
   </component>
 </project>
