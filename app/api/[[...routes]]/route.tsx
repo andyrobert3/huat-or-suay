@@ -399,8 +399,6 @@ app.frame('/game', async (c) => {
         positionType = buttonValue as PositionType;
     }
 
-    console.log('buttonValue', buttonValue);
-
     const { fid } = frameData!;
     // TODO: have validation on inputs
 
@@ -799,21 +797,6 @@ app.frame('/result', async(c) => {
                         display: 'flex',
                       }}>{userDetails.data.balance}</div>
                     </div>
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '8px',
-                    }}>
-                      <div style={{
-                        display: 'flex',
-                        color: '#7a7d89',
-                        fontSize: '36px',
-                      }}>Countdown
-                      </div>
-                      <div style={{
-                        display: 'flex',
-                      }}>{timeFormat}s</div>
-                    </div>
                   </div>
                 </div>
             </div>
@@ -826,7 +809,7 @@ app.frame('/result', async(c) => {
 });
 
 function determineOutcome(position: PositionType, startPrice: number, currentPrice: number): GameStatus {
-  if (position === PositionType.LONG) {
+  if (position.toUpperCase() === PositionType.LONG) {
     return currentPrice > startPrice ? GameStatus.WON : GameStatus.LOST;
   } else {
     return currentPrice < startPrice ? GameStatus.WON : GameStatus.LOST;
