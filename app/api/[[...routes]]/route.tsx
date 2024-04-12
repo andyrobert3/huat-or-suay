@@ -79,9 +79,9 @@ app.frame('/instructions', async (c) => {
                         display: 'flex',
                     }}>
                         <p>
-                            Each round lasts for 30 seconds, you’ll be presented with a random token to bet on.
-                            You have 100 🧧 {TOKEN_TICKER} to bet on the token going 📈 up or 📉 down by the end of the round.
-                            At the end of each round, we check the prices and if goes in the direction you chose, you win 1.5X.
+                            Each round lasts for 30 seconds, you’ll be betting on the price direction of Ethereum.
+                            You have 1,000 🧧 {TOKEN_TICKER} to bet on the token going 📈 long or 📉 short by the end of the round.
+                            At the end of each round, we check the prices and if goes in the direction you chose, you win 2X in 🧧 {TOKEN_TICKER}.
                             At the end of each day, the top user for that day wins 100 $DEGEN.
                         </p>
                     </div>
