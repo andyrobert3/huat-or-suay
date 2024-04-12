@@ -34,10 +34,24 @@ app.frame('/', (c) => {
 })
 
 app.frame('/pregame', async (c) => {
-    const { buttonValue, inputText, status } = c
-    const price = await fetchTokenPrice("ETH");
-    const { frameData } = c;
+    const tokenName = "Ethereum"
+    const tokenSymbol = "ETH"
+    const price = (await fetchTokenPrice(tokenSymbol)).toLocaleString(); // format w thousands sep
+    const { frameData } = c
     const fid = frameData?.fid;
+
+    const { data: user } = await supabase.from('User')
+        .select()
+        .eq('fid', fid)
+        .single<Tables<'User'>>();
+
+    const { data } = await supabase.from('Game')
+        .select()
+        .eq('status', GameStatus.IN_PROGRESS)
+        .order('created_at', {ascending: false})
+        .returns<Array<Tables<'Game'>>>();
+
+    console.log(data);
 
     if (!fid) {
         return c.res({
@@ -51,33 +65,139 @@ app.frame('/pregame', async (c) => {
 
     return c.res({
         image: (
-            <div style={{ display: "flex", height: "100%" }}>
-                <div
+            <div
+              style={{
+                display: 'flex',
+                padding: '30px',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundImage: 'linear-gradient(135deg,#202020,#000)',
+                gap: '35px',
+                fontSize:'22px',
+                width: '1200px',
+                height: '630px',
+                color: '#fff',
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems:'center'
+              }}>
+                <span
+                  style={{
+                    minHeight: '60px',
+                    minWidth: '60px',
+                    borderRadius: '10px',
+                    backgroundImage: 'linear-gradient(135deg, #2e55ff, #ff279c)',
+                    marginRight: '15px',
+                  }}
+                />
+                <div style={{
+                  display: 'flex',
+                  color: '#fff',
+                  fontSize: '60px'
+                }}>
+                  {tokenName} {tokenSymbol}
+                </div>
+              </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  gap: '100px',
+                }}>
+                  <div
                     style={{
-                        color: 'black',
-                        fontSize: 60,
-                        fontStyle: 'normal',
-                        letterSpacing: '-0.025em',
-                        lineHeight: 1.4,
-                        marginTop: 30,
-                        padding: '0 120px',
-                        whiteSpace: 'pre-wrap',
-                    }}
-                >
-                    {`Current Ethereum Price: $${price}\nTime: ${new Date().toTimeString().split(' ')[0]}`}
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      fontSize: '48px',
+                      gap: '25px',
+                  }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Current price</div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{price} USDC</div>
+                    </div>
+      
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Your 🧧 {TOKEN_TICKER} balance</div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{user?.balance.toLocaleString()}</div>
+                    </div>
+                  </div>
+      
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      fontSize: '48px',
+                      gap: '25px',
+                      fontWeight: '500',
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Time now</div>
+                      <div style={{
+                        display: 'flex',
+                      }}>{new Date().toTimeString().split(' ')[0]}</div>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        color: '#7a7d89',
+                        fontSize: '36px',
+                      }}>Ends in</div>
+                      <div style={{
+                        display: 'flex',
+                      }}>4 hours</div>
+                    </div>
+                  </div>
                 </div>
             </div>
         ),
         intents: [
             <TextInput placeholder={`Enter your position in 🧧 ${TOKEN_TICKER}`} />,
-            <Button value={PositionType.LONG} action="/game">Long</Button>,
-            <Button value={PositionType.SHORT} action="/game">Short</Button>,
-            <Button action="/pregame">Refresh</Button>,
-            <Button.Reset>Reset</Button.Reset>,
-        ]
+            <Button value="long" action="/game">📈 LONG</Button>,
+            <Button value="short" action="/game">📉 SHORT</Button>,
+            <Button action="/pregame">🔄 Refresh</Button>,
+            <Button.Reset>🗑️ Reset</Button.Reset>,
+        ],
     })
 })
-
 
 app.frame('/profile', async (c) => {
     const { status, frameData } = c
@@ -96,7 +216,6 @@ app.frame('/profile', async (c) => {
         .select('fid')
         .eq('fid', fid)
         .returns<Array<Tables<'Game'>>>();
-
 
     return c.res({
         image: (
@@ -215,8 +334,6 @@ app.frame('/profile', async (c) => {
             <Button.Reset>Reset</Button.Reset>,
         ],
     })
-
-
 })
 
 app.frame('/game', async (c) => {
