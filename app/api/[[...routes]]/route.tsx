@@ -29,7 +29,69 @@ app.frame('/', (c) => {
         intents: [
             <Button value="joinround" action="/pregame">👉 Begin</Button>,
             <Button value="profile" action="/profile">🧧 My profile</Button>,
+            <Button value="instructions" action="/instructions">❓ Instructions</Button>,
         ]
+    })
+})
+
+app.frame('/instructions', async (c) => {
+    const { frameData } = c;
+    return c.res({
+        image: (
+            <div
+              style={{
+                display: 'flex',
+                padding: '30px',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundImage: 'linear-gradient(135deg,#202020,#000)',
+                gap: '35px',
+                fontSize:'22px',
+                width: '1200px',
+                height: '630px',
+                color: '#fff',
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems:'center'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  color: '#fff',
+                  fontSize: '60px'
+                }}>
+                  Instructions
+                </div>
+              </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  gap: '100px',
+                }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      fontSize: '36px',
+                      gap: '25px',
+                  }}>
+                    <div style={{
+                        display: 'flex',
+                    }}>
+                        <p>
+                            Each round lasts for 30 seconds, you’ll be presented with a random token to bet on.
+                            You have 100 🧧 {TOKEN_TICKER} to bet on the token going 📈 up or 📉 down by the end of the round.
+                            At the end of each round, we check the prices and if goes in the direction you chose, you win 1.5X.
+                            At the end of each day, the top user for that day wins 100 $DEGEN.
+                        </p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        ),
+        intents: [
+            <Button value="joinround" action="/pregame">👉 Begin</Button>,
+        ],
     })
 })
 
