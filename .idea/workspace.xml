@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="348450a6-74ca-4154-969c-00997c93e31a" name="Changes" comment="" />
+    <list default="true" id="348450a6-74ca-4154-969c-00997c93e31a" name="Changes" comment="feat: setup initial route.tsx">
+      <change afterPath="$PROJECT_DIR$/app/utils/time.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/[[...routes]]/route.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/[[...routes]]/route.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,6 +54,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/utils" />
+      <recent name="$PROJECT_DIR$/app" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -58,11 +67,96 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712890259337</updated>
-      <workItem from="1712890260492" duration="695000" />
+      <workItem from="1712890260492" duration="10479000" />
     </task>
+    <task id="LOCAL-00001" summary="feat: npm init frog">
+      <option name="closed" value="true" />
+      <created>1712891073349</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712891073349</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feat: binance price api">
+      <option name="closed" value="true" />
+      <created>1712891670186</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712891670186</updated>
+    </task>
+    <task id="LOCAL-00003" summary="chore: game status &amp; position">
+      <option name="closed" value="true" />
+      <created>1712891897608</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1712891897608</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: add dotenv package">
+      <option name="closed" value="true" />
+      <created>1712892134009</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1712892134010</updated>
+    </task>
+    <task id="LOCAL-00005" summary="chore: supabase db types">
+      <option name="closed" value="true" />
+      <created>1712892146592</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1712892146592</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: price fetching cache algorithm">
+      <option name="closed" value="true" />
+      <created>1712892707236</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1712892707236</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat: route.tsx setup">
+      <option name="closed" value="true" />
+      <created>1712896659746</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1712896659746</updated>
+    </task>
+    <task id="LOCAL-00008" summary="chore: .env.example">
+      <option name="closed" value="true" />
+      <created>1712896733276</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1712896733276</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat: setup initial route.tsx">
+      <option name="closed" value="true" />
+      <created>1712897238400</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1712897238400</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: npm init frog" />
+    <MESSAGE value="feat: binance price api" />
+    <MESSAGE value="chore: game status &amp; position" />
+    <MESSAGE value="feat: add dotenv package" />
+    <MESSAGE value="chore: supabase db types" />
+    <MESSAGE value="feat: price fetching cache algorithm" />
+    <MESSAGE value="feat: route.tsx setup" />
+    <MESSAGE value="chore: .env.example" />
+    <MESSAGE value="feat: setup initial route.tsx" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: setup initial route.tsx" />
   </component>
 </project>
