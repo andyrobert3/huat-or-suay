@@ -10,7 +10,7 @@ import { supabase } from '../../utils/supabase';
 import { Tables } from "@/app/types/supabase";
 import { WELCOME_GIF } from "@/app/constants";
 
-const TOKEN_TICKER = "HUAT";
+const TOKEN_TICKER = "ANGPAO";
 
 const app = new Frog({
   assetsPath: '/',
@@ -192,7 +192,7 @@ app.frame('/pregame', async (c) => {
             <Button value="long" action="/game">📈 LONG</Button>,
             <Button value="short" action="/game">📉 SHORT</Button>,
             <Button action="/pregame">🔄 Refresh</Button>,
-            <Button.Reset>🗑️ Reset</Button.Reset>,
+            <Button.Reset>Home</Button.Reset>,
         ],
     })
 })
@@ -329,7 +329,7 @@ app.frame('/profile', async (c) => {
         ),
         intents: [
             <Button action="/profile">Refresh</Button>,
-            <Button.Reset>Reset</Button.Reset>,
+            <Button.Reset>Home</Button.Reset>,
         ],
     })
 })
