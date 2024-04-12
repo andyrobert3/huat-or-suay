@@ -27,8 +27,8 @@ app.frame('/', (c) => {
     return c.res({
         image: WELCOME_GIF,
         intents: [
-            <Button value="joinround" action="/pregame">Join Round</Button>,
-            <Button value="profile" action="/profile">Profile</Button>,
+            <Button value="joinround" action="/pregame">👉 Begin</Button>,
+            <Button value="profile" action="/profile">🧧 My profile</Button>,
         ]
     })
 })
@@ -36,7 +36,11 @@ app.frame('/', (c) => {
 app.frame('/pregame', async (c) => {
     const tokenName = "Ethereum"
     const tokenSymbol = "ETH"
+
+    // Fetch prices of token
     const price = (await fetchTokenPrice(tokenSymbol)).toLocaleString(); // format w thousands sep
+
+    // Get frame data
     const { frameData } = c
     const fid = frameData?.fid;
 
@@ -328,7 +332,7 @@ app.frame('/profile', async (c) => {
             </div>
         ),
         intents: [
-            <Button action="/profile">Refresh</Button>,
+            <Button action="/profile">🔄 Refresh</Button>,
             <Button.Reset>Reset</Button.Reset>,
         ],
     })
