@@ -239,20 +239,6 @@ app.frame('/pregame', async (c) => {
                         display: 'flex',
                       }}>{new Date().toTimeString().split(' ')[0]}</div>
                     </div>
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '8px',
-                    }}>
-                      <div style={{
-                        display: 'flex',
-                        color: '#7a7d89',
-                        fontSize: '36px',
-                      }}>Ends in</div>
-                      <div style={{
-                        display: 'flex',
-                      }}>{data?.[0]?.gameEndTimeStamp}</div>
-                    </div>
                   </div>
                 </div>
             </div>
